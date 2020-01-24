@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+.first-p{display:none;}
+
+</style>
+<script>
+$(document).ready(function(){
+$( "div.first" ).click(function() {
+ $('.first-p').hide();   
+
+    $(this).next().slideToggle();
+});
+});
+</script>
+</head>
+<body>
+
+<div class="first">Toggle first</div>
+    <p class="first-p">First hidden paragraph.</p>
+<div class="first">Toggle second</div>
+    <p class="first-p">Second hidden paragraph.</p>
+    <div class="first">Toggle third</div>
+    <p class="first-p">Third hidden paragraph.</p>
+    
+
+</body>
+</html>
