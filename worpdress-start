@@ -1,0 +1,80 @@
+<?php
+/*
+Plugin Name: Custom Plugin
+Plugin URI: http://developerbazaar.com/
+Description: This is Custom plugin for learning. 
+Author: Urf Rahul Patwari
+Author URI: https://rahul.developerbazaar.com/
+Text Domain: contact-form-7
+Domain Path: /languages/
+Version: 1.1.1
+*/
+define("PLUGIN_DIR_PATH",plugin_dir_path(__FILE__));
+define("PLUGIN_URL",plugins_url());
+
+function add_my_custom_menu(){
+	add_menu_page("CustomPlugin","Custom Plugin","manage_options","custom-plugin","add_page","dashicons-admin-multisite",5);
+ 
+
+   add_submenu_page("custom-plugin","Add New","Add New","manage_options","custom-plugin","add_page");
+
+    add_submenu_page("custom-plugin","All Pages","All Pages","manage_options","add-pages","all_page");
+}
+
+
+
+
+add_action("admin_menu","add_my_custom_menu");
+
+// function custom_admin_view(){
+// 	echo "Testing Start Here
+
+// 	";
+// }
+function all_page(){
+include_once PLUGIN_DIR_PATH."/page/all-page.php";
+}
+function add_page(){
+	include_once PLUGIN_DIR_PATH."/page/add-page.php";
+}
+
+
+function custom_plugin_table()
+{
+	global $wpdb;
+	require_once(ABSPATH .'wp-admin/includes/upgrade.php');
+	if (count($wpdb->get_var('SHOW TABLES LIKE "wp_custom_table"'))==0) {
+		$sql="CREATE TABLE `wp_custom_table` (
+ `id` int(255) NOT NULL AUTO_INCREMENT,
+ `name` varchar(255) NOT NULL,
+ `email` varchar(255) NOT NULL,
+ `password` varchar(255) NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+";
+dbDelta($sql);
+
+	}
+}
+register_activation_hook(__FILE__,'custom_plugin_table');
+
+function deactivate_table()
+{
+	global $wpdb;
+       $wpdb->query("DROP table IF Exists wp_custom_table");
+}
+ //register_deactivation_hook(__FILE__,'deactivate_table');
+ register_uninstall_hook(__FILE__,'deactivate_table');
+
+
+function create_page()
+{
+	$page=array();
+	$page['post_title']="Custom Plugin";
+	$page['post_content']="This is post contant examlpe";
+	$page['post_status']="publish";
+	$page['post_content']="custom-plugin-online";
+	$page['post_type']="page";
+	wp_insert_post($page);
+}
+ register_activation_hook(__FILE__,'create_page');
